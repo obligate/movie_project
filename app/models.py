@@ -1,16 +1,18 @@
-# Author: Peter
-# coding: utf8
-# http://www.pythondoc.com/flask-sqlalchemy/config.html#id2
-
+# -*- coding: utf-8 -*-
+from app import db
 from datetime import datetime
-import pymysql
-from flask import Flask
+
+"""
+from flask import Flask, render_template
 from flask_sqlalchemy import SQLAlchemy
+import pymysql
+import os
 
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = "mysql+pymysql://root:root@127.0.0.1:3306/movie"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = True
 db = SQLAlchemy(app)
+"""
 
 
 # 会员
@@ -181,6 +183,7 @@ class Adminlog(db.Model):
 # 操作日志
 class Oplog(db.Model):
     __tablename__ = "oplog"
+    # __table_args__ = {"useexisting": True}
     id = db.Column(db.Integer, primary_key=True)  # 编号
     admin_id = db.Column(db.Integer, db.ForeignKey('admin.id'))  # 所属管理员
     ip = db.Column(db.String(100))  # 登录IP
@@ -192,18 +195,15 @@ class Oplog(db.Model):
 
 
 """
-if __name__ == '__main__':
+if __name__ == "__main__":
     db.create_all()
-    
-    #############
-     role = Role(
+
+    role = Role(
         name="超级管理员",
         auths=""
     )
     db.session.add(role)
     db.session.commit()
-    
-    ###############
     from werkzeug.security import generate_password_hash
 
     admin = Admin(
